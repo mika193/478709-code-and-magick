@@ -3,6 +3,7 @@
 var GAP = 10;
 var HISTOGRAM_HEIGHT = 150;
 var TEXT_WIDTH = 200;
+var COLOR_OFFSET = 8;
 
 var cloudParams = {
   WIDTH: 420,
@@ -18,12 +19,12 @@ var barParams = {
 };
 
 var fontParams = {
-  size: 16,
-  family: 'PT Mono',
-  baseline: 'hanging',
+  SIZE: 16,
+  FAMILY: 'PT Mono',
+  BASELINE: 'hanging',
 };
 
-var lineHeight = fontParams.size * 1.4;
+var lineHeight = fontParams.SIZE * 1.4;
 var contentCordX = cloudParams.X + cloudParams.CURVE + GAP;
 var contentCordY = cloudParams.Y + cloudParams.CURVE + GAP;
 var barMaxHeight = HISTOGRAM_HEIGHT - lineHeight;
@@ -31,6 +32,14 @@ var shadowColor = 'rgba(0, 0, 0, 0.7)';
 var cloudColor = 'rgba(255, 255, 255, 1)';
 var textColor = 'rgba(0, 0, 0, 1)';
 var barPlayerColor = 'rgba(255, 0, 0, 1)';
+
+/**
+ * Отрисовывает облако
+ * @param {object} ctx
+ * @param {number} x - x-координата начала отрисовки облака
+ * @param {number} y - y-координата начала отрисовки облака
+ * @param {string} color - цвет облака
+ */
 
 var buildCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
@@ -48,25 +57,30 @@ var buildCloud = function (ctx, x, y, color) {
   ctx.fill();
 };
 
-var getMaxElement = function (array) {
-  return Math.max.apply(null, array);
-};
+/**
+ * Генерирует цвет
+ * @return {string}
+ */
 
 var generateColor = function () {
-  var color = Math.ceil(Math.random() * 100) / 100;
-  if (color < 0.1) {
-    color = color += 0.08;
-  }
-
-  return 'rgba(0, 0, 255, ' + color + ')';
+  return 'rgba(0, 0, 255, ' + Math.ceil(Math.random() * (100 - COLOR_OFFSET) + COLOR_OFFSET) / 100 + ')';
 };
+
+/**
+ * Отрисовывает текст
+ * @param {object} ctx
+ * @param {string} text - отрисовываемый текст
+ * @param {number} maxWidth - ширина текстового поля
+ * @param {number} textCordX - х-координата начала текстового поля
+ * @param {number} textCordY - y-координата начала текстового поля
+ */
 
 var writeText = function (ctx, text, maxWidth, textCordX, textCordY) {
   var words = text.split(' ');
   var line = '';
 
-  ctx.font = fontParams.size + 'px ' + fontParams.family;
-  ctx.textBaseline = fontParams.baseline;
+  ctx.font = fontParams.SIZE + 'px ' + fontParams.FAMILY;
+  ctx.textBaseline = fontParams.BASELINE;
   ctx.fillStyle = textColor;
 
   for (var i = 0; i < words.length; i++) {
@@ -85,11 +99,30 @@ var writeText = function (ctx, text, maxWidth, textCordX, textCordY) {
   ctx.fillText(line, textCordX, textCordY);
 };
 
+/**
+ * Отрисовывает столбики гистограммы и подписывает их
+ * @param {object} ctx
+ * @param {number} x - х-координата начала отрисовки столбика гистограммы и подписи гистограммы
+ * @param {number} y - y-координата начала отрисовки столбика гистограммы
+ * @param {number} width - ширина столбика гистограммы
+ * @param {number} height - высота столбика гистограммы
+ * @param {string} color - цвет столбика гистограммы
+ * @param {string} name - подпись гистограммы
+ * @param {number} nameY - y-координата начала отрисовки подписи гистограммы
+ */
+
 var buildHistogram = function (ctx, x, y, width, height, color, name, nameY) {
   ctx.fillStyle = color;
   ctx.fillRect(x, y, width, height);
   writeText(ctx, name, width + barParams.GAP / 2, x, nameY);
 };
+
+/**
+ * Отрисовывает облако с надписью и гистограммой
+ * @param {object} ctx
+ * @param {array} names - массив имен победителей
+ * @param {array} times - массив времен победителей
+ */
 
 window.renderStatistics = function (ctx, names, times) {
   buildCloud(ctx, cloudParams.X + GAP, cloudParams.Y + GAP, shadowColor);
@@ -97,7 +130,7 @@ window.renderStatistics = function (ctx, names, times) {
 
   writeText(ctx, 'Ура вы победили! Список результатов:', TEXT_WIDTH, contentCordX, contentCordY);
 
-  var maxElement = getMaxElement(times);
+  var maxElement = Math.max.apply(null, times);
   var histogramCordX = cloudParams.X + (cloudParams.WIDTH - (barParams.WIDTH * times.length + barParams.GAP * (times.length - 1))) / 2;
 
   for (var i = 0; i < times.length; i++) {
