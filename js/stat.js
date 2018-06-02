@@ -35,12 +35,11 @@ var barPlayerColor = 'rgba(255, 0, 0, 1)';
 
 /**
  * Отрисовывает облако
- * @param {object} ctx
+ * @param {Object} ctx
  * @param {number} x - x-координата начала отрисовки облака
  * @param {number} y - y-координата начала отрисовки облака
  * @param {string} color - цвет облака
  */
-
 var buildCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
   ctx.beginPath();
@@ -61,20 +60,18 @@ var buildCloud = function (ctx, x, y, color) {
  * Генерирует цвет
  * @return {string}
  */
-
 var generateColor = function () {
   return 'rgba(0, 0, 255, ' + Math.ceil(Math.random() * (100 - COLOR_OFFSET) + COLOR_OFFSET) / 100 + ')';
 };
 
 /**
  * Отрисовывает текст
- * @param {object} ctx
+ * @param {Object} ctx
  * @param {string} text - отрисовываемый текст
  * @param {number} maxWidth - ширина текстового поля
  * @param {number} textCordX - х-координата начала текстового поля
  * @param {number} textCordY - y-координата начала текстового поля
  */
-
 var writeText = function (ctx, text, maxWidth, textCordX, textCordY) {
   var words = text.split(' ');
   var line = '';
@@ -101,7 +98,7 @@ var writeText = function (ctx, text, maxWidth, textCordX, textCordY) {
 
 /**
  * Отрисовывает столбики гистограммы и подписывает их
- * @param {object} ctx
+ * @param {Object} ctx
  * @param {number} x - х-координата начала отрисовки столбика гистограммы и подписи гистограммы
  * @param {number} y - y-координата начала отрисовки столбика гистограммы
  * @param {number} width - ширина столбика гистограммы
@@ -110,7 +107,6 @@ var writeText = function (ctx, text, maxWidth, textCordX, textCordY) {
  * @param {string} name - подпись гистограммы
  * @param {number} nameY - y-координата начала отрисовки подписи гистограммы
  */
-
 var buildHistogram = function (ctx, x, y, width, height, color, name, nameY) {
   ctx.fillStyle = color;
   ctx.fillRect(x, y, width, height);
@@ -119,11 +115,10 @@ var buildHistogram = function (ctx, x, y, width, height, color, name, nameY) {
 
 /**
  * Отрисовывает облако с надписью и гистограммой
- * @param {object} ctx
- * @param {array} names - массив имен победителей
- * @param {array} times - массив времен победителей
+ * @param {Object} ctx
+ * @param {Array.<string>} names - массив имен победителей
+ * @param {Array.<number>} times - массив времен победителей
  */
-
 window.renderStatistics = function (ctx, names, times) {
   buildCloud(ctx, cloudParams.X + GAP, cloudParams.Y + GAP, shadowColor);
   buildCloud(ctx, cloudParams.X, cloudParams.Y, cloudColor);
